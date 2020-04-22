@@ -1,4 +1,4 @@
-package com.ravimhzn.blogapplication.ui.state
+package com.ravimhzn.blogapplication.ui.main.state
 
 sealed class MainStateEvent {
 

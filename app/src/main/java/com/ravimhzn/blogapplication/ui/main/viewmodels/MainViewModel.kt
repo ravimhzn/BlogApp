@@ -1,4 +1,4 @@
-package com.ravimhzn.blogapplication.ui.viewmodels
+package com.ravimhzn.blogapplication.ui.main.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -7,9 +7,9 @@ import androidx.lifecycle.ViewModel
 import com.ravimhzn.blogapplication.model.BlogPost
 import com.ravimhzn.blogapplication.model.User
 import com.ravimhzn.blogapplication.repository.Repository
-import com.ravimhzn.blogapplication.ui.state.MainStateEvent
-import com.ravimhzn.blogapplication.ui.state.MainStateEvent.*
-import com.ravimhzn.blogapplication.ui.state.MainViewState
+import com.ravimhzn.blogapplication.ui.main.state.MainStateEvent
+import com.ravimhzn.blogapplication.ui.main.state.MainStateEvent.*
+import com.ravimhzn.blogapplication.ui.main.state.MainViewState
 import com.ravimhzn.blogapplication.util.AbsentLiveData
 import com.ravimhzn.blogapplication.util.Result
 

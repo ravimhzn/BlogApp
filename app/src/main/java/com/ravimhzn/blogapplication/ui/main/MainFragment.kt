@@ -1,21 +1,34 @@
 package com.ravimhzn.blogapplication.ui.main
 
+import android.content.Context
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.ravimhzn.blogapplication.R
-import com.ravimhzn.blogapplication.ui.state.MainStateEvent
-import com.ravimhzn.blogapplication.ui.viewmodels.MainViewModel
+import com.ravimhzn.blogapplication.model.BlogPost
+import com.ravimhzn.blogapplication.ui.main.state.MainStateEvent
+import com.ravimhzn.blogapplication.ui.main.viewmodels.MainViewModel
+import com.ravimhzn.blogapplication.util.TopSpacingItemDecoration
+import kotlinx.android.synthetic.main.fragment_main.*
 
 /**
  * A simple [Fragment] subclass.
  */
-class MainFragment : Fragment() {
+class MainFragment : Fragment(), BlogListRecyclerAdapter.Interaction {
 
     lateinit var viewModel: MainViewModel
+
+    lateinit var dataStateListener: DataStateListener
+
+    lateinit var blogListRecyclerAdapter: BlogListRecyclerAdapter
+
+    override fun onItemSelected(position: Int, item: BlogPost) {
+        println("Debug -> RecyclerView Clicked -> Position :: $position")
+        println("Debug -> RecyclerView Clicked -> ITEM :: $item")
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,7 +42,18 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
         initViewModel()
+        initRecyclerView()
         subscribeObservers()
+    }
+
+    private fun initRecyclerView() {
+        recycler_view.apply {
+            layoutManager = LinearLayoutManager(this@MainFragment.context)
+            val topSpacingDecorator = TopSpacingItemDecoration(30)
+            addItemDecoration(topSpacingDecorator)
+            blogListRecyclerAdapter = BlogListRecyclerAdapter(this@MainFragment)
+            adapter = blogListRecyclerAdapter
+        }
     }
 
     private fun initViewModel() {
@@ -41,24 +65,19 @@ class MainFragment : Fragment() {
     private fun subscribeObservers() {
         viewModel.resultDataState.observe(viewLifecycleOwner, Observer { dataState ->
 
-            dataState.data?.let { mainViewState ->
-                mainViewState.blogPosts?.let {
-                    viewModel.setBlogListData(it)
+            dataStateListener.onDataStateChange(dataState)
+
+            dataState.data?.let { event ->
+
+                event.getContentIfNotHandled()?.let { mainViewState ->
+                    mainViewState.blogPosts?.let {
+                        viewModel.setBlogListData(it)
+                    }
+
+                    mainViewState.user?.let {
+                        viewModel.setUser(it)
+                    }
                 }
-
-                mainViewState.user?.let {
-                    viewModel.setUser(it)
-                }
-            }
-
-            //Handle Error
-            dataState.message?.let {
-
-            }
-
-            //Handle Loading
-            dataState.loading?.let {
-                //show progress
             }
 
         })
@@ -66,6 +85,7 @@ class MainFragment : Fragment() {
         viewModel.viewState.observe(viewLifecycleOwner, Observer { viewState ->
             viewState.blogPosts?.let {
                 println("debug -> Setting blogpost to RecyclerView:: $it")
+                blogListRecyclerAdapter.submitList(it)
             }
 
             viewState.user?.let {
@@ -98,4 +118,12 @@ class MainFragment : Fragment() {
         viewModel.setStateEvent(MainStateEvent.GetBlogPostEvent())
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        try {
+            dataStateListener = context as DataStateListener
+        } catch (e: ClassCastException) {
+            println("Debug -> $context must implement DataStateListener")
+        }
+    }
 }

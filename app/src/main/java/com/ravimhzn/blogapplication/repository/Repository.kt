@@ -6,41 +6,10 @@ import com.codingwithmitch.mviexample.util.GenericApiResponse
 import com.ravimhzn.blogapplication.model.BlogPost
 import com.ravimhzn.blogapplication.model.User
 import com.ravimhzn.blogapplication.network.RetrofitBuilder
-import com.ravimhzn.blogapplication.ui.state.MainViewState
+import com.ravimhzn.blogapplication.ui.main.state.MainViewState
 import com.ravimhzn.blogapplication.util.Result
 
 object Repository {
-
-//    fun getBlogPosts(): LiveData<DataState<MainViewState>> {
-//        return Transformations
-//            .switchMap(RetrofitBuilder.apiService.getBlogPosts()) { apiResponse ->
-//                object : LiveData<DataState<MainViewState>>() {
-//                    override fun onActive() {
-//                        super.onActive()
-//                        value = when (apiResponse) {
-//                            is ApiSuccessResponse -> {
-//                                DataState.success(
-//                                    data = MainViewState(
-//                                        blogPosts = apiResponse.body
-//                                    )
-//                                )
-//                            }
-//                            is ApiErrorResponse -> {
-//                                DataState.error(
-//                                    message = apiResponse.errorMessage
-//                                )
-//                            }
-//                            is ApiEmptyResponse -> {
-//                                DataState.error(
-//                                    message = "HTTP 204 -> Nothing was returned"
-//                                )
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//    }
-
 
     fun getBlogPosts(): LiveData<Result<MainViewState>> {
         return object : NetworkBoundResource<List<BlogPost>, MainViewState>() {
@@ -70,5 +39,35 @@ object Repository {
 
         }.asLiveData()
     }
+
+    //    fun getBlogPosts(): LiveData<DataState<MainViewState>> {
+//        return Transformations
+//            .switchMap(RetrofitBuilder.apiService.getBlogPosts()) { apiResponse ->
+//                object : LiveData<DataState<MainViewState>>() {
+//                    override fun onActive() {
+//                        super.onActive()
+//                        value = when (apiResponse) {
+//                            is ApiSuccessResponse -> {
+//                                DataState.success(
+//                                    data = MainViewState(
+//                                        blogPosts = apiResponse.body
+//                                    )
+//                                )
+//                            }
+//                            is ApiErrorResponse -> {
+//                                DataState.error(
+//                                    message = apiResponse.errorMessage
+//                                )
+//                            }
+//                            is ApiEmptyResponse -> {
+//                                DataState.error(
+//                                    message = "HTTP 204 -> Nothing was returned"
+//                                )
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//    }
 
 }
