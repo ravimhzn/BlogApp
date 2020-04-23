@@ -49,9 +49,21 @@ class MainViewModel : ViewModel() {
 
     fun setBlogListData(blogPosts: List<BlogPost>) {
         val update = getCurrentViewStateOrNew() //initialize
-        update.blogPosts = blogPosts
+        var list = blogPosts.filter { blogPost ->
+            filterInitialList(blogPost)
+        }
+        // it.rows?.filter { it?.let { it1 -> checkIfValuesNotNull(it1) }!! }
+        update.blogPosts = list
         _viewState.value = update
     }
+
+    /**
+     * Since I have no control over api and I don't want that initial list.
+     */
+    private fun filterInitialList(it: BlogPost): Boolean {
+        return it?.pk != 0
+    }
+
 
     fun setUser(user: User) {
         val update = getCurrentViewStateOrNew()

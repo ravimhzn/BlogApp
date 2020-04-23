@@ -7,8 +7,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.ravimhzn.blogapplication.R
 import com.ravimhzn.blogapplication.model.BlogPost
+import com.ravimhzn.blogapplication.model.User
 import com.ravimhzn.blogapplication.ui.main.state.MainStateEvent
 import com.ravimhzn.blogapplication.ui.main.viewmodels.MainViewModel
 import com.ravimhzn.blogapplication.util.TopSpacingItemDecoration
@@ -89,9 +91,20 @@ class MainFragment : Fragment(), BlogListRecyclerAdapter.Interaction {
             }
 
             viewState.user?.let {
+                setUserProperties(it)
                 println("debug -> Setting User Data:: $it")//set User Data
             }
         })
+    }
+
+    private fun setUserProperties(user: User) {
+        email.text = user.email
+        username.text = user.username
+        view?.let {
+            Glide.with(it.context)
+                .load(user.image)
+                .into(image)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
