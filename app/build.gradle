@@ -67,4 +67,10 @@ dependencies {
     // Leak Canary (detecting memory leaks)
     def leak_canary_version = "2.0-alpha-3"
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$leak_canary_version"
+
+    // Local unit tests
+    def mockitoVersion = "3.2.0"
+    def mockitoKotlinVersion = '2.2.0'
+    testImplementation "org.mockito:mockito-core:$mockitoVersion"
+    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockitoKotlinVersion"
 }
